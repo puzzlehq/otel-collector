@@ -2,9 +2,9 @@ receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: "0.0.0.0:4319"  # Updated to avoid conflict
+        endpoint: "0.0.0.0:4319"
       http:
-        endpoint: "0.0.0.0:4320"  # Updated to avoid conflict
+        endpoint: "0.0.0.0:4320"
 
 processors:
   batch: {}
@@ -23,4 +23,4 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging]  # Update this
+      exporters: [logging]

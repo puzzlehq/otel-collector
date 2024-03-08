@@ -1,0 +1,11 @@
+# just keeping for reference if we need it later.
+version: '3.9'
+services:
+  collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4319:4319"   # OTLP gRPC receiver
+      - "4320:4320"   # OTLP HTTP receiver
+      - "8888:8888"   # Prometheus metrics exposed by the collector

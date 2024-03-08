@@ -1,0 +1,26 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4319"  # Updated to avoid conflict
+      http:
+        endpoint: "0.0.0.0:4320"  # Updated to avoid conflict
+
+processors:
+  batch: {}
+
+exporters:
+  logging:
+    loglevel: info
+  #todo: add jaeger config
+  # jaeger:
+  #   endpoint: "jaeger:14250"
+  #   tls:
+  #     insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging]  # Update this

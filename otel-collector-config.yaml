@@ -17,7 +17,7 @@ exporters:
     format: proto
 
   otlp/jaeger:
-    endpoint: "http://otel-collector-production-1559.up.railway.app"
+    endpoint: "http://jaeger-production-b33d.up.railway.app"
     tls:
       insecure: true
 

@@ -18,6 +18,7 @@ exporters:
 
   otlp/jaeger:
     endpoint: jaeger-production-b33d.up.railway.app:4317
+    # endpoint: "http://jaeger.railway.internal:4317"
     tls:
       insecure: true
 

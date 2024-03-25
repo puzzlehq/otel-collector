@@ -4,26 +4,58 @@ receivers:
       grpc:
       http:
 
-exporters:
+  # The hostmetrics receiver is required to get correct infrastructure metrics in Datadog.
+  hostmetrics:
+    collection_interval: 10s
+    scrapers:
+      paging:
+        metrics:
+          system.paging.utilization:
+            enabled: true
+      cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+      disk:
+      filesystem:
+        metrics:
+          system.filesystem.utilization:
+            enabled: true
+      load:
+      memory:
+      network:
+      processes:
+
+  # The prometheus receiver scrapes metrics needed for the OpenTelemetry Collector Dashboard.
   prometheus:
-    endpoint: "0.0.0.0:8889"
-    const_labels:
-      label1: value1
-
-  logging:
-
-  zipkin:
-    endpoint: "http://zipkin.railway.internal:9411/api/v2/spans"
-    format: proto
-
-  otlp/jaeger:
-    endpoint: jaeger-production-b33d.up.railway.app:4317
-    # endpoint: "http://jaeger.railway.internal:4317"
-    tls:
-      insecure: true
+    config:
+      scrape_configs:
+      - job_name: 'otelcol'
+        scrape_interval: 10s
+        static_configs:
+        - targets: ['0.0.0.0:8888']
 
 processors:
   batch:
+    send_batch_max_size: 100
+    send_batch_size: 10
+    timeout: 10s
+
+exporters:
+  datadog:
+    api:
+      site: datadoghq.com      
+      key: ${env:DD_API_KEY}
+
+  debug:
+    verbosity: detailed
+
+  logging:
+
+  otlp/jaeger:
+    endpoint: jaeger.railway.internal:4317
+    tls:
+      insecure: true
 
 extensions:
   health_check:
@@ -38,8 +70,11 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging, zipkin, otlp/jaeger]
+      exporters: [logging, otlp/jaeger, debug, datadog]
     metrics:
-      receivers: [otlp]
+      receivers: [hostmetrics, otlp]
       processors: [batch]
-      exporters: [logging, prometheus]
+      exporters: [logging, debug, datadog]
+    logs:
+      receivers: [otlp]
+      exporters: [datadog]

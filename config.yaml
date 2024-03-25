@@ -44,7 +44,7 @@ processors:
 exporters:
   datadog:
     api:
-      site: datadoghq.com      
+      site: us5.datadoghq.com
       key: ${env:DD_API_KEY}
 
   debug:

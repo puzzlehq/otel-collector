@@ -72,7 +72,7 @@ service:
       processors: [batch]
       exporters: [logging, otlp/jaeger, debug, datadog]
     metrics:
-      receivers: [hostmetrics, otlp]
+      receivers: [otlp]
       processors: [batch]
       exporters: [logging, debug, datadog]
     logs:
